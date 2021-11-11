@@ -1,0 +1,31 @@
+repos:
+    # general hooks to verify or beautify code
+    - repo: git://github.com/pre-commit/pre-commit-hooks
+      rev: v2.5.0
+      hooks:
+      - id: check-added-large-files
+        args: [--maxkb=100]
+      - id: trailing-whitespace
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: detect-private-key
+      - id: mixed-line-ending
+      - id: pretty-format-json
+        args: [--autofix]
+
+    # autoformat code with black formatter
+    - repo: https://github.com/psf/black
+      rev: 19.10b0
+      hooks:
+        - id: black
+          args: [-l 120]
+
+    # check code style
+    - repo: https://gitlab.com/pycqa/flake8
+      rev: 3.7.9
+      hooks:
+        - id: flake8
+          additional_dependencies: [flake8-quotes==3.0.0]
+          args: [--config, .flake8]
