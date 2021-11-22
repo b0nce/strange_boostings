@@ -4,6 +4,6 @@ setup(
     name="StrangeBoostings",
     version="0.1",
     packages=["strangeboostings",],
-    license=open("LICENSE").read(),
+    license="MIT License",
     long_description="Nothing here...",
 )
