@@ -56,4 +56,4 @@ class LGBMLinearClassifier(BaseEstimator, ClassifierMixin):
     def predict_proba(self, X):
         check_is_fitted(self)
         X = self._validate_data(X)
-        return self.linear_model_.predict(self.lightgbm_model_.booster_.predict(X, pred_contrib=True))
+        return self.linear_model_.predict_proba(self.lightgbm_model_.booster_.predict(X, pred_contrib=True))
