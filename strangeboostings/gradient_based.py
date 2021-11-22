@@ -25,8 +25,10 @@ class LGBMLinearClassifier(BaseEstimator, ClassifierMixin):
         else:
             return check_array(X)
 
-    def fit(self, X, y):
+    def fit(self, X, y, valset=None):
         X, y = self._validate_data(X, y)
+        if valset is not None:
+            valset = self._validate_data(*valset)
         self.classes_ = unique_labels(y)
 
         if self.lightgbm_model is not None:
@@ -40,7 +42,7 @@ class LGBMLinearClassifier(BaseEstimator, ClassifierMixin):
         else:
             self.linear_model_ = SGDClassifier(loss="modified_huber", random_state=self.random_state)
 
-        self.lightgbm_model_.fit(X, y)
+        self.lightgbm_model_.fit(X, y, eval_set=valset, verbose=False)
         X_contrib = self.lightgbm_model_.booster_.predict(X, pred_contrib=True)
         self.linear_model_.fit(X_contrib, y)
 
