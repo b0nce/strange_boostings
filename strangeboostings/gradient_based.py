@@ -61,7 +61,5 @@ class LGBMLinearClassifier(BaseEstimator, ClassifierMixin):
         try:
             return self.linear_model_.predict_proba(self.self.lightgbm_model_.booster_.predict(X, pred_contrib=True))
         except AttributeError:
-            pred = self.linear_model_.decision_function(
-                self.self.lightgbm_model_.booster_.predict(X, pred_contrib=True)
-            )
+            pred = self.linear_model_.decision_function(self.lightgbm_model_.booster_.predict(X, pred_contrib=True))
             return np.repeat([[-1, 0]], len(pred), axis=0) + sigmoid(pred)[:, None]
