@@ -1,4 +1,6 @@
 import lightgbm as lgb
+import numpy as np
+from scipy.special import expit as sigmoid
 from sklearn.base import clone, BaseEstimator, ClassifierMixin
 from sklearn.linear_model import SGDClassifier
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
@@ -56,4 +58,12 @@ class LGBMLinearClassifier(BaseEstimator, ClassifierMixin):
     def predict_proba(self, X):
         check_is_fitted(self)
         X = self._validate_data(X)
-        return self.linear_model_.predict_proba(self.lightgbm_model_.booster_.predict(X, pred_contrib=True))
+        try:
+            return self.linear_model_.predict_proba(
+                self.pca_.transform(self.lightgbm_model_.booster_.predict(X, pred_contrib=True))
+            )
+        except AttributeError:
+            pred = self.linear_model_.decision_function(
+                self.pca_.transform(self.lightgbm_model_.booster_.predict(X, pred_contrib=True))
+            )
+            return np.repeat([[-1, 0]], len(pred), axis=0) + sigmoid(pred)[:, None]
